@@ -1,12 +1,13 @@
 package br.edu.ifpe.apoo.persistencia;
 import java.util.List;
+import br.edu.ifpe.apoo.excecoes.ExcecaoNegocio;
 
 public interface IGenericDAO<T> {
-	public void inserir(T objeto);
+	 void inserir(T objeto);
 	
-	public void editar(T objeto);
+	void editar(T objeto)throws ExcecaoNegocio;
 	
-	public boolean remover(String cpf);
-	
-	public List<T> listar(T objeto);
+	boolean remover(String cpf)throws ExcecaoNegocio;
+	T consultar(String cpf);
+	public List<T> listar();
 }

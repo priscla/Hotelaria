@@ -1,33 +1,31 @@
 package br.edu.ifpe.apoo.negocio;
 import java.util.List;
-
 import br.edu.ifpe.apoo.entidades.Hospede;
+import br.edu.ifpe.apoo.excecoes.ExcecaoNegocio;
 
-public class Fachada {
+public class Fachada  {
+	private ControladorHospede controladorHospede;
+	public Fachada() {
+		this.controladorHospede = new ControladorHospede();
+	}
 
-	
-	public static void inserir(Hospede hospede) throws ExcecaoNegocio {
-	ControladorHospede controlador =new ControladorHospede();
-	controlador.inserir(hospede);
-	
-	
-}
-	public static void editar(Hospede hospede) throws ExcecaoNegocio {
-		ControladorHospede controlador =new ControladorHospede();
-		controlador.editar(hospede);
+	public void cadastrarHospede(Hospede hospede) throws ExcecaoNegocio {
+		controladorHospede.inserir(hospede);
 	}
-	public static void remover(Hospede hospede) throws ExcecaoNegocio {
-		ControladorHospede controlador =new ControladorHospede();
-		controlador.remover(null);
+
+	public void editar(Hospede hospede) throws ExcecaoNegocio {
+		controladorHospede.editar(hospede);
 	}
-	
-	public static void consultar(Hospede hospede) throws ExcecaoNegocio {
-		ControladorHospede controlador =new ControladorHospede();
-		controlador.consultarHospede(null);
-		
-}
-	public static void listarTodos(Hospede hospede) throws ExcecaoNegocio {
-		ControladorHospede controlador =new ControladorHospede();
-		controlador.listarTodos();
+
+	public void remover(String cpf) throws ExcecaoNegocio {
+		controladorHospede.remover(cpf);
+	}
+
+	public Hospede consultar(String cpf) throws ExcecaoNegocio {
+		return controladorHospede.consultar(cpf);
+	}
+
+	public List<Hospede> listarTodos() throws ExcecaoNegocio {
+		return controladorHospede.consultarTodos();
 	}
 }

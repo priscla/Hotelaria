@@ -1,6 +1,6 @@
 package br.edu.ifpe.apoo.entidades;
 
-public class Hospede {
+public  class Hospede {
 	private String nome;
     private String cpf;
     private String endereco;

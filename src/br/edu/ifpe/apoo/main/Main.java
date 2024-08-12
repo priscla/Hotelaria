@@ -1,13 +1,12 @@
 package br.edu.ifpe.apoo.main;
 
-import br.edu.ifpe.apoo.apresentacao.TelaHospede;
-
 import br.edu.ifpe.apoo.apresentacao.Diaria;
 
 import br.edu.ifpe.apoo.apresentacao.HotelTipoQuarto;
-import br.edu.ifpe.apoo.apresentacao.QuartoDuplo;
-import br.edu.ifpe.apoo.apresentacao.QuartoTriplo;
-import br.edu.ifpe.apoo.apresentacao.Solteiro;
+import br.edu.ifpe.apoo.apresentacao.TelaHospede;
+import br.edu.ifpe.apoo.entidades.QuartoDuplo;
+import br.edu.ifpe.apoo.entidades.QuartoTriplo;
+import br.edu.ifpe.apoo.entidades.Solteiro;
 import br.edu.ifpe.apoo.excecoes.ExcecaoNegocio;
 
 

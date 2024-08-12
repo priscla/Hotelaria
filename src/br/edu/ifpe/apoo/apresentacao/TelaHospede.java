@@ -1,105 +1,119 @@
 package br.edu.ifpe.apoo.apresentacao;
+import br.edu.ifpe.apoo.entidades.*;
+
 import java.util.Scanner;
 
 import java.util.List;
 
-
 import br.edu.ifpe.apoo.entidades.Hospede;
+import br.edu.ifpe.apoo.entidades.Solteiro;
 import br.edu.ifpe.apoo.excecoes.ExcecaoNegocio;
+import br.edu.ifpe.apoo.log.LogHotel;
 import br.edu.ifpe.apoo.negocio.FabricaControlador;
+import br.edu.ifpe.apoo.negocio.Fachada;
 import br.edu.ifpe.apoo.negocio.IControladorHospede;
 
 public class TelaHospede {
-	 Scanner scanner = new Scanner (System.in);
+	private Scanner scanner;
+	//private AdapterDataNascimento dataNascimentoAdapter;
+	private Fachada fachada;
 
-	    public void exibir() throws ExcecaoNegocio {
-	    	int opcao = 0;
-	        
-	       do{
-	            System.out.println("Bem-vindo(a)!");
+	public TelaHospede() {
+		this.scanner = new Scanner(System.in);
+		//this.dataNascimentoAdapter = new DataNascimento();
+		this.fachada = new Fachada();
+	
+	          
+	            
+	}
+
+		public void exibir() {
+			int opcao;
+			do {
+				System.out.println("Bem-vindo(a)!");
 	            System.out.println("Digite 1 para cadastrar um hóspede;");
 	            System.out.println("Digite 2 para editar os dados do hóspede;");
 	            System.out.println("Digite 3 para remover o hóspede;");
 	            System.out.println("Digite 4 para consultar um hóspede; ou");
-	            System.out.println("Digite 5 para sair");
+	            System.out.println("Digite 5 para  Consultar todos os hóspedes");
+	            System.out.println("Digite 6 para sair");
 	            
 	          
-	            
-	            
 
-	            try {
-	                opcao = Integer.parseInt(scanner.nextLine());
-	            } catch (ClassCastException ex) {
-					System.out.println("Digite um número válido!");
-					
-					
-			
-				}
-	                
-	                
+				opcao = lerInteiro("uma opção");
 
 				switch (opcao) {
 				case 1:
-					this.inserir();
+					inserir();
 					break;
 				case 2:
-					this.editar();
+					editar();
 					break;
 				case 3:
-					this.remover();
+					remover();
 					break;
 				case 4:
-					this.consultar();
+					consultar();
 					break;
 				case 5:
-					this.listarTodos();
+					listarTodos();
 					break;
-				
+				case 6:
+					System.out.println("\n Até mais!");
+					//LogHotel.registrarMovimentacao(" Saiu do sistema.");
+					break;
 				default:
-					System.out.println("Opção inválida! Digite os números entre 1 e 6.");
+					System.out.println("\n Opção inválida! Digite um número entre 1 e 6.");
 					break;
 				}
-			} while (opcao != 5);
-		} 
-	                   
-	   
+			} while (opcao != 6);
+		}
 
 		
-
-			private void inserir(Controlador controlador,Hospede hospede)throws ExcecaoNegocio {
-				System.out.println("Cadastro de hóspede");
-				IControladorHospede controlador = FabricaControlador.getControladorHospede();
-				String cpf = lerString("N°̣ do CPF: ");
-				if (cpf.equals(cpf)) {
-					System.out.println("CPF inválido! Verifique o número e tente novamente.");
-					return;
-				}
-				
+		private void inserir() {
+			// TODO Auto-generated method stub
 			
-				String nome = lerString("Nome");
-				
+		}
 
+		private void cadastrarHospede() {
+			System.out.println("Cadastro de Hóspede");
+			String nome = lerString("nome");
+			String cpf = lerString("CPF");
+			
 
-				Hospede.HospedeBuilder builder = new Hospede.HospedeBuilder()
-						.cpf(cpf)
-						.nome(nome);
-					    			
-						
-				Hospede hospede = builder.criar();
-				
+			int tipoQuarto = lerInteiro("tipo doquarto (1-Simples, 2-Duplo, 3-Triplo)");
 
-				try {
-					controlador.inserir(hospede);
-					System.out.println("Hóspede cadastrado com sucesso! CPF: " + hospede.getCpf());
-				} catch (ExcecaoNegocio excecao) {
-					System.out.println("Erro ao cadastrar hóspede: " + excecao.getMessage());
-				}
+			Hospede hospede;
+			switch (tipoQuarto) {
+			case 1:
+				hospede = new Solteiro(nome, cpf);
+				break;
+			case 2:
+				hospede = new QuartoDuplo(nome, cpf);
+				break;
+			case 3:
+				hospede = new QuartoTriplo(nome, cpf);
+				break;
+			default:
+				System.out.println("Tipo de animal inválido.");
+				//LogHotel.registrarMovimentacao(String.format("Tentativa de cadastrar um hóspede com tipo inválido: %d", tipoQuarto));
+				return;
 			}
+
 			
+
+			try {
+				fachada.cadastrarHospede(hospede);
+				System.out.println("Animal cadastrado com sucesso! ID: " + hospede.getCpf());
+				//LogZoologico.registrarMovimentacao(String.format("Hóspede cadastrado com sucesso. CPF: %d, Nome: %s, cpf: %s", hospede.getCpf(), animal.getNome()));
+			} catch (ExcecaoNegocio excecao) {
+				System.out.println("Erro ao cadastrar animal: " + excecao.getMessage());}
+				//LogZoologico.registrarMovimentacao("Erro ao cadastrar hóspede: " + excecao.getMessage());
+			}
+		
 
 			private void editar() {
 				System.out.println("Editar de hóspede");
-				IControladorHospede controlador = FabricaControlador.getControladorHospede();
 
 				String cpf = lerString("CPF do hóspede");
 				Hospede hospedeExistente; 
@@ -109,7 +123,7 @@ public class TelaHospede {
 					
 				
 				try {
-					hospedeExistente = controlador.consultarHospede(cpf);
+					hospedeExistente = fachada.consultar(cpf);
 				} catch (Exception e) {
 					System.out.println("Erro ao consultar hóspede: " + e.getMessage());
 					return;
@@ -122,28 +136,29 @@ public class TelaHospede {
 				
 				
 				String novoNome = lerString("novo nome: ");
+				String novoCpf = lerString("novo CPF: ");
 			    Hospede hospedeAtualizado = new Hospede(hospedeExistente.getCpf(), novoNome);
 
 				
 				
 
 				try {
-					 controlador.editar(hospedeAtualizado);
+					 fachada.editar(hospedeAtualizado);
 				     System.out.println("Hóspede editado com sucesso!");
 					
 				} catch (ExcecaoNegocio e) {
-					System.out.println("Erro ao editar hóspede com o cpf " + hospede.getCpf());
+					System.out.println("Erro ao editar hóspede com o cpf " + hospedeAtualizado.getCpf());
+					}
 				}
-				}
+				
 			private void remover() {
 				System.out.println("Remover Hóspede");
-				IControladorHospede controlador = FabricaControlador.getControladorHospede();
 
 				String cpf = lerString("CPF do hóspede");
 
 				try {
 					
-						controlador.remover(cpf);
+						fachada.remover(cpf);
 						System.out.println("Hóspede removido com sucesso!");
 					
 				} catch (Exception e) {
@@ -153,13 +168,12 @@ public class TelaHospede {
 				}}
 			}
 			private void consultar() {
-				System.out.println("Consulta de Paciente");
-				IControladorHospede controlador = FabricaControlador.getControladorHospede();
+				System.out.println("Consulta de hóspede");
 
-				String cpf = lerString("CPF do paciente");
+				String cpf = lerString("CPF hóspede");
 
 				try {
-					Hospede hospede = controlador.consultarHospede(cpf);
+					Hospede hospede = fachada.consultar(cpf);
 					if (hospede != null || cpf.equals(hospede)) {
 						System.out.println("Hóspede encontrado:");
 						System.out.println("CPF: " + hospede.getCpf());
@@ -175,10 +189,9 @@ public class TelaHospede {
 			
 			private void listarTodos() {
 				System.out.println("Lista de Todos os hóspede");
-				IControladorHospede controlador = FabricaControlador.getControladorHospede();
 
 				try {
-					List<Hospede> hospede = controlador.listarTodos();
+					List<Hospede> hospede = fachada.listarTodos();
 					if (!hospede.isEmpty()  || hospede.equals(hospede)) {
 						System.out.println("Lista de hospede:");
 						for (Hospede h : hospede) {
