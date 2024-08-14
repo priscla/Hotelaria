@@ -1,6 +1,6 @@
 package br.edu.ifpe.apoo.entidades;
 
-public  class Hospede {
+public  class Hospede extends EntidadeBase {
 	private String nome;
     private String cpf;
     private String endereco;
@@ -81,12 +81,18 @@ public  class Hospede {
 
 
 	public static class HospedeBuilder{
+		private String  id;
 		private String nome;
 		private String cpf;
 	    private String endereco;
 	    private String telefone;
 	    private int nuQuartosDisponiveis;
 		private String verificacaoReservas;
+		
+		public HospedeBuilder id(String id) {
+			this.id= id;
+			return this;
+		}
 		
 		public HospedeBuilder nome (String nome) {
 			this.nome = nome;

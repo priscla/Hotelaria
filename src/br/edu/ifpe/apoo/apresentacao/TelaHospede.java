@@ -1,26 +1,28 @@
 package br.edu.ifpe.apoo.apresentacao;
 import br.edu.ifpe.apoo.entidades.*;
+import br.edu.ifpe.apoo.util.AdapterCpf;
+import br.edu.ifpe.apoo.util.AdapterCpfImpl;
+
+
 
 import java.util.Scanner;
 
 import java.util.List;
 
 import br.edu.ifpe.apoo.entidades.Hospede;
-import br.edu.ifpe.apoo.entidades.Solteiro;
 import br.edu.ifpe.apoo.excecoes.ExcecaoNegocio;
 import br.edu.ifpe.apoo.log.LogHotel;
-import br.edu.ifpe.apoo.negocio.FabricaControlador;
 import br.edu.ifpe.apoo.negocio.Fachada;
-import br.edu.ifpe.apoo.negocio.IControladorHospede;
+
 
 public class TelaHospede {
 	private Scanner scanner;
-	//private AdapterDataNascimento dataNascimentoAdapter;
+	private AdapterCpf adapterCpf;
 	private Fachada fachada;
 
 	public TelaHospede() {
 		this.scanner = new Scanner(System.in);
-		//this.dataNascimentoAdapter = new DataNascimento();
+        this.adapterCpf = new AdapterCpfImpl(); // Inicializando o AdapterCpf
 		this.fachada = new Fachada();
 	
 	          
@@ -80,10 +82,15 @@ public class TelaHospede {
 			String nome = lerString("nome");
 			String cpf = lerString("CPF");
 			
+			 // Usando o Adapter para formatar o CPF
+	        String cpfFormatado = adapterCpf.formatarCpf(cpf);
+
+	        Hospede hospede = new Hospede(nome, cpfFormatado, 0, "", "", "", 0);
+			
 
 			int tipoQuarto = lerInteiro("tipo doquarto (1-Simples, 2-Duplo, 3-Triplo)");
 
-			Hospede hospede;
+			
 			switch (tipoQuarto) {
 			case 1:
 				hospede = new Solteiro(nome, cpf);
@@ -104,10 +111,10 @@ public class TelaHospede {
 
 			try {
 				fachada.cadastrarHospede(hospede);
-				System.out.println("Animal cadastrado com sucesso! ID: " + hospede.getCpf());
+				System.out.println("Hóspede cadastrado com sucesso! CPF: " + hospede.getCpf());
 				//LogZoologico.registrarMovimentacao(String.format("Hóspede cadastrado com sucesso. CPF: %d, Nome: %s, cpf: %s", hospede.getCpf(), animal.getNome()));
 			} catch (ExcecaoNegocio excecao) {
-				System.out.println("Erro ao cadastrar animal: " + excecao.getMessage());}
+				System.out.println("Erro ao cadastrar hóspede: " + excecao.getMessage());}
 				//LogZoologico.registrarMovimentacao("Erro ao cadastrar hóspede: " + excecao.getMessage());
 			}
 		
@@ -171,12 +178,16 @@ public class TelaHospede {
 				System.out.println("Consulta de hóspede");
 
 				String cpf = lerString("CPF hóspede");
+				  // Usando o Adapter para desformatar o CPF
+		        String cpfDesformatado = adapterCpf.desformatarCpf(cpf);
+
+				
 
 				try {
 					Hospede hospede = fachada.consultar(cpf);
 					if (hospede != null || cpf.equals(hospede)) {
 						System.out.println("Hóspede encontrado:");
-						System.out.println("CPF: " + hospede.getCpf());
+						System.out.println("CPF: " +adapterCpf.formatarCpf(hospede.getCpf()));
 						System.out.println("Nome: " + hospede.getNome());
 					
 					} else {

@@ -1,9 +1,8 @@
 package br.edu.ifpe.apoo.negocio;
-
-
-
 import br.edu.ifpe.apoo.persistencia.FabricaDAO;
+
 import br.edu.ifpe.apoo.persistencia.GenericDAO;
+
 
 import java.util.List;
 
